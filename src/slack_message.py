@@ -24,7 +24,7 @@ def send_paper_alert(title: str, authors: str, journal: str, abstract: str, doi:
     """논문 정보를 Slack으로 전송"""
     try:
         # Abstract 길이 제한 및 포맷팅 개선
-        abstract_truncated = abstract[:800] + "..." if len(abstract) > 800 else abstract
+        abstract_truncated = abstract[:1200] + "..." if len(abstract) > 1200 else abstract
         
         text = f"*🧬 새로운 AI Drug Discovery 논문*\n\n"
         text += f"*📄 제목:* {title}\n"
