@@ -1,9 +1,7 @@
 import requests
 import os
-from dotenv import load_dotenv
+from .config import SLACK_WEBHOOK_URL
 
-load_dotenv()
-slack_webhook_url = os.getenv('SLACK_WEBHOOK_URL', 'your_default_url')
 
 def send_message_slack(text: str = "코드 실행 완료") -> None:
     payload = {
@@ -19,7 +17,7 @@ def send_message_slack(text: str = "코드 실행 완료") -> None:
     }
     # requests.post (WebhookUrl. SLACK_WEBHOOK_URL, json=payload)
 
-    requests.post (slack_webhook_url, json=payload)
+    requests.post (SLACK_WEBHOOK_URL, json=payload)
 
 
 def send_paper_alert(title: str, authors: str, journal: str, abstract: str, doi: str = None) -> bool:
@@ -48,7 +46,7 @@ def send_paper_alert(title: str, authors: str, journal: str, abstract: str, doi:
             ],
         }
         
-        response = requests.post(slack_webhook_url, json=payload)
+        response = requests.post(SLACK_WEBHOOK_URL, json=payload)
         return response.status_code == 200
         
     except Exception as e:

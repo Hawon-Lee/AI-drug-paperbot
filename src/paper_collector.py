@@ -7,6 +7,7 @@ from dateutil import parser
 import re
 from Bio import Entrez
 import xml.etree.ElementTree as ET
+from .config import PUBMED_EMAIL
 
 class KeywordFilter:
     def __init__(self):
@@ -88,7 +89,7 @@ class PaperCollector:
         self.filter = KeywordFilter()
         
         # PubMed 설정
-        Entrez.email = "hw7825@korea.ac.kr"  # 실제 이메일로 변경하세요
+        Entrez.email = PUBMED_EMAIL  # 실제 이메일로 변경하세요
         self.journals = {
             'JCIM': 'J Chem Inf Model',
             'JCTC': 'J Chem Theory Comput'
