@@ -30,6 +30,7 @@ cd AI-drug-paperbot
 ```bash
 # uv 사용 (권장)
 uv venv
+source .venv/bin/activate # In case of linux/macos
 uv pip install -r requirements.txt
 
 # pip 사용
