@@ -41,6 +41,13 @@ def daily_paper_check():
 
 def start_scheduler():
     """스케줄러 시작"""
+    from src.config import validate_config
+    
+    # 환경변수 검증
+    if not validate_config():
+        print("\n🛑 환경변수 설정을 완료한 후 다시 실행해주세요.")
+        return
+    
     # 매일 오전 10시에 실행
     schedule.every().day.at("10:00").do(daily_paper_check)
     
@@ -55,7 +62,7 @@ def start_scheduler():
     # 스케줄 대기
     while True:
         schedule.run_pending()
-        time.sleep(60)  # 1분마다 체크
+        time.sleep(60)
 
 if __name__ == "__main__":
     try:

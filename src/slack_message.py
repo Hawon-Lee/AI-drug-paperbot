@@ -20,10 +20,12 @@ def send_message_slack(text: str = "코드 실행 완료") -> None:
     requests.post (SLACK_WEBHOOK_URL, json=payload)
 
 
-def send_paper_alert(title: str, authors: str, journal: str, abstract: str, doi: str = None) -> bool:
+def send_paper_alert(title: str, authors: str, journal: str, abstract: str, 
+                    doi: str = None, relevance_score: float = 0, 
+                    matched_keywords: list[str] = None) -> bool:
     """논문 정보를 Slack으로 전송"""
     try:
-        # Abstract 길이 제한 및 포맷팅 개선
+        # Abstract 길이 조정
         abstract_truncated = abstract[:1200] + "..." if len(abstract) > 1200 else abstract
         
         text = f"*🧬 새로운 AI Drug Discovery 논문*\n\n"
@@ -32,6 +34,13 @@ def send_paper_alert(title: str, authors: str, journal: str, abstract: str, doi:
         text += f"*📚 저널:* {journal}\n"
         if doi:
             text += f"*🔗 DOI:* {doi}\n"
+        
+        # 관련도 점수와 키워드 정보 추가
+        text += f"*📊 관련도 점수:* {relevance_score:.2f}/1.00\n"
+        if matched_keywords:
+            keywords_str = ", ".join(matched_keywords[:5])  # 최대 5개
+            text += f"*🎯 매칭된 키워드:* {keywords_str}\n"
+        
         text += f"\n*📝 Abstract:*\n{abstract_truncated}"
         
         payload = {

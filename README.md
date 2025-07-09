@@ -37,7 +37,24 @@ uv pip install -r requirements.txt
 pip install -r requirements.txt
 ```
 
-### 3. 환경변수 설정
+### 3. Slack 웹훅 설정
+3-1. Slack 앱 생성
+- https://api.slack.com/apps 접속\
+- "Create New App" 클릭\
+- "From scratch" 선택\
+- App Name: "Paper Alert Bot" (원하는 이름)\
+- Workspace: 알림받을 워크스페이스 선택\
+- "Create App" 클릭
+
+3-2. Incoming Webhooks 설정
+
+- 좌측 메뉴에서 "Incoming Webhooks" 클릭\
+- "Activate Incoming Webhooks" 토글을 On으로 변경\
+- 하단의 "Add New Webhook to Workspace" 클릭\
+- 메시지를 받을 채널 선택 (개인 DM 권장)\
+- "Allow" 클릭
+
+### 4. 환경변수 설정
 ```bash
 cp .env.example .env
 ```
@@ -45,32 +62,15 @@ cp .env.example .env
 `.env` 파일 편집:
 ```
 SLACK_WEBHOOK_URL=https://hooks.slack.com/services/YOUR/WEBHOOK/URL
-PUBMED_EMAIL=your_email@example.com
+PUBMED_EMAIL=your_email@example.com  # any email
 ```
 
-### 4. 실행
+
+### 5. 실행
 ```bash
 python main.py
 ```
 
-## Slack 웹훅 설정
-
-1. [Slack API](https://api.slack.com/apps)에서 새 앱 생성
-2. "Incoming Webhooks" 활성화
-3. 웹훅 URL을 `.env` 파일에 추가
-
-## 폴더 구조
-
-```
-AI-drug-paperbot/
-├── main.py                 # 메인 실행 파일
-├── requirements.txt        # 패키지 의존성
-├── .env.example           # 환경변수 템플릿
-└── src/
-    ├── paper_collector.py  # 논문 수집 및 필터링
-    ├── paper_tracker.py    # 중복 추적 및 Slack 전송
-    └── config.py           # 설정 관리
-```
 
 ## 설정 변경
 
@@ -84,7 +84,7 @@ self.primary_keywords = [
 ]
 ```
 
-### 실행 시간 변경
+### 전송 시간 변경
 `main.py`에서 스케줄 수정:
 ```python
 schedule.every().day.at("10:00").do(daily_paper_check)  # 시간 변경
@@ -124,6 +124,19 @@ tracker.check_and_send_new_papers(days_back=1, min_score=0.3)
 **논문이 안 나옴**
 - `min_score` 값을 낮춰보세요 (0.2 정도)
 - `days_back` 값을 늘려보세요 (7일 정도)
+
+## 폴더 구조
+
+```
+AI-drug-paperbot/
+├── main.py                 # 메인 실행 파일
+├── requirements.txt        # 패키지 의존성
+├── .env.example           # 환경변수 템플릿
+└── src/
+    ├── paper_collector.py  # 논문 수집 및 필터링
+    ├── paper_tracker.py    # 중복 추적 및 Slack 전송
+    └── config.py           # 설정 관리
+```
 
 ## 라이선스
 

@@ -37,48 +37,49 @@ class KeywordFilter:
             'clinical trial', 'patient', 'hospital'
         ]
     
-    def calculate_relevance_score(self, text: str) -> float:
-        """텍스트의 관련도 점수 계산 (0-1 범위)"""
+    def calculate_relevance_score(self, text: str) -> tuple:
+        """텍스트의 관련도 점수와 매칭된 키워드 반환"""
         text_lower = text.lower()
         score = 0.0
+        matched_keywords = []
         
         # 제외 키워드 체크
         for keyword in self.exclude_keywords:
             if keyword in text_lower:
-                return 0.0  # 즉시 제외
+                return 0.0, []
         
-        # 1차 키워드 체크 (필수)
+        # 1차 키워드 체크
         primary_found = False
         for keyword in self.primary_keywords:
             if keyword in text_lower:
                 primary_found = True
-                score += 0.3  # 기본 점수
-                break
+                score += 0.3
+                matched_keywords.append(keyword)
         
         if not primary_found:
-            return 0.0  # 1차 키워드 없으면 제외
+            return 0.0, []
         
-        # 2차 키워드 체크 (보너스)
+        # 2차 키워드 체크
         for keyword in self.bonus_keywords:
             if keyword in text_lower:
                 score += 0.2
+                matched_keywords.append(keyword)
         
-        return min(score, 1.0)  # 최대 1.0으로 제한
-    
+        return min(score, 1.0), matched_keywords
+
     def filter_papers(self, papers: List[Dict], min_score: float = 0.3) -> List[Dict]:
         """논문 리스트를 필터링하여 관련 논문만 반환"""
         filtered_papers = []
         
         for paper in papers:
-            # 제목 + 초록으로 점수 계산
             search_text = f"{paper['title']} {paper['abstract']}"
-            score = self.calculate_relevance_score(search_text)
+            score, matched_keywords = self.calculate_relevance_score(search_text)
             
             if score >= min_score:
                 paper['relevance_score'] = score
+                paper['matched_keywords'] = matched_keywords
                 filtered_papers.append(paper)
         
-        # 점수순으로 정렬
         filtered_papers.sort(key=lambda x: x['relevance_score'], reverse=True)
         return filtered_papers
 
