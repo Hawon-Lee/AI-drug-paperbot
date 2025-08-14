@@ -28,13 +28,13 @@ cd AI-drug-paperbot
 
 ### 2. 의존성 설치
 ```bash
-# uv 사용 (권장)
+# pip 사용
+pip install -r requirements.txt
+
+# uv 사용
 uv venv
 source .venv/bin/activate # In case of linux/macos
 uv pip install -r requirements.txt
-
-# pip 사용
-pip install -r requirements.txt
 ```
 
 ### 3. Slack 웹훅 설정
